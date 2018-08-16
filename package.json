@@ -19,6 +19,8 @@
   },
   "scripts": {
     "start": "node slack_bot.js",
+    "generate": "node ./scripts/generateManager.js",
+    "module": "node ./scripts/generateModule.js",
     "test": "mocha"
   },
   "repository": {
