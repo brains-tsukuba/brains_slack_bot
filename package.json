@@ -1,0 +1,35 @@
+{
+  "name": "brains_slack_bot",
+  "version": "1.0.0",
+  "description": "brains slack team にて様々な機能を提供します.",
+  "main": "generate.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "dependencies": {
+    "botkit": "^0.6.16",
+    "dotenv": "^5.0.1",
+    "is_js": "^0.9.0",
+    "pg": "^7.4.3",
+    "sequelize": "^4.38.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^4.0.0"
+  },
+  "scripts": {
+    "start": "node slack_bot.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brains-tsukuba/brains_slack_bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brains-tsukuba/brains_slack_bot/issues"
+  },
+  "homepage": "https://github.com/brains-tsukuba/brains_slack_bot#readme"
+}
