@@ -35,28 +35,43 @@ brains help get
 
 ### 環境構築
 
-brains-tsukubaのteamに入ってることを確認して、
+*クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*
+
+brains-tsukuba の GitHub Organization に加入後, brains_slack_bot を clone して, 必要なモジュールをインストールしてください.
 ```
 git clone https://github.com/brains-tsukuba/brains_slack_bot
 cd brains_slack_bot
-npm install
-token=xoxb-XXX(API Token)XXX node bot.js
+npm i
 ```
 
-tokenはHerokuから確認。HerokuのID＆PWは、知ってる人に聞いて。
-
-slackでbrains-botに
+DB は Postgres で, ORM に Sequelize を使用しています.   
+Migration 後に初期データを挿入します.
 ```
+sequelize db:migrate --env development
+sequelize db:seed:all
+```
+*注 sequelize をグローバルにインストールしていない場合は, sequelze の部分が node_modules/.bin/sequelize になります.*
+
+Botの立ち上げコマンドは以下の通りです.
+```
+npm start
+```
+
+動作確認は, Bot を立ち上げた上で, brains slack team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
+```
+(Slack @brainsbotDev がいるチャンネルで)
+@brainsbotDev brains get joinmessage
+
+(Slack @brainsbotDev DM で)
 brains get joinmessage
 ```
-で入部者向けメッセージ来たら、動作チェックOK。
-Herokuを止めてなければ、ローカルとHerokuの分で2通来る。
+正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
 
 ### 新たにコマンドを追加する
 ボットに新たにコマンドを追加するには,
 
 ```
-node generate.js [CommandName]
+npm run generate -- [CommnadName]
 ```
 
 を実行してください. これで新たなコマンドの雛形が生成されます.
@@ -88,9 +103,10 @@ module.exports = class BrainsManager extends BaseManager {
 
 ```javascript
 ...
-get(that) {
-    const message = that.REPLY_MESSAGES_FOR_GET_METHOD(that.inputData.argument);
-    that.hearContext.bot.reply(that.hearContext.message, message);
+get() {
+  const argument = this.inputData.argumnet;
+  const message = this.REPLY_MESSAGES_FOR_GET_METHOD(argument);
+  this.reply(this.message, message);
 }
 ...
 ```
@@ -98,5 +114,9 @@ get(that) {
 上記の例は, getオプションを追加した例です.
 
 ### 新たなモジュールを追加する
-モジュールは共通化したい処理等をまとめるために作成します.<br>
-モジュールは, worker_service以下に追加したいモジュール名と同じ名前のファイルを作成してください.
+モジュールは共通化したい処理等をまとめるために作成します.  
+モジュールを作成するには以下のコマンドを使用します.
+```
+npm run module -- [ModuleName]
+```
+これを実行すると, worker_service 以下に, [ModuleName]Service.js というファイルが生成されます.
