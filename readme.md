@@ -61,7 +61,7 @@ $ postgres -D /usr/local/var/postgres
 ```
 
 その後以下のコマンドを実行してください.  
-*注 sequelize をグローバルにインストールしていない場合は, 以下の `setup` を `setup:ng` にして実行してください*
+*注 sequelize-cli をグローバルにインストールしていない場合は, 以下の `setup` を `setup:ng` にして実行してください*
 ```
 $ cd brains_slack_bot
 $ npm run setup
