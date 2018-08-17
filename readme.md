@@ -35,29 +35,46 @@ brains help get
 
 ### 環境構築
 
-*クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*
-
-brains-tsukuba の GitHub Organization に加入後, brains_slack_bot を clone して, 必要なモジュールをインストールしてください.
+#### レポジトリのクローン
+**brains-tsukuba の GitHub Organization に加入後**, brains_slack_bot を clone してください.  
+brains-tsukuba organization の加入に関しては, Yohei Hasegawa に連絡してください.
 ```
-git clone https://github.com/brains-tsukuba/brains_slack_bot
-cd brains_slack_bot
-npm i
+$ git clone https://github.com/brains-tsukuba/brains_slack_bot
 ```
 
-DB は Postgres で, ORM に Sequelize を使用しています.   
-Migration 後に初期データを挿入します.
-```
-sequelize db:migrate --env development
-sequelize db:seed:all
-```
-*注 sequelize をグローバルにインストールしていない場合は, sequelze の部分が node_modules/.bin/sequelize になります.*
+#### .env ファイルについて
+*クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*  
 
+.env ファイルの値を設定します. 該当項目は以下の4つです.
+- DATABASE_URL_LOCAL: ローカルの postgres の host を設定してください.
+- DATABASE_PORT: ローカルの postgres のポート番号を設定してください.
+- DATABASE_USER: ローカルの postgres のユーザ名を設定してください.
+- DATABASE_PASSWORD: ローカルの postgres のパスワードを設定してください.
+
+
+#### プロジェクトのセットアップ
+必要なモジュールのインストールと DB のセットアップを行います.  
+
+はじめに, ローカルで postgres を起動します.
+```
+$ postgres -D /usr/local/var/postgres
+```
+
+その後以下のコマンドを実行してください.  
+*注 sequelize をグローバルにインストールしていない場合は, 以下の `setup` を `setup:ng` にして実行してください*
+```
+$ cd brains_slack_bot
+$ npm run setup
+```
+
+
+#### 動作確認
 Botの立ち上げコマンドは以下の通りです.
 ```
 npm start
 ```
 
-動作確認は, Bot を立ち上げた上で, brains slack team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
+動作確認は, Bot を立ち上げた上で, Slack BrainsTsukuba Team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
 ```
 (Slack @brainsbotDev がいるチャンネルで)
 @brainsbotDev brains get joinmessage
@@ -66,6 +83,19 @@ npm start
 brains get joinmessage
 ```
 正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
+
+#### 開発を始める際の注意点
+開発を始める前に, Slack BrainsTsukuba Team の #brains_bot でどうような機能を追加/修正するかを共有してください.  
+機能に関する仕様策定もこのチャンネルで行います.
+
+実際に開発する際は, develop ブランチから feature/ もしくは fix/ ブランチを切ってから作業を行ってください.  
+基本的に, ブランチ名は作業内容を一言で表すような名前にしてください.  
+`ex. feature/add_hoge_command`
+
+Pull Request を Open する際は, テンプレートに従って必要項目を記入してください.  
+また, Reviewiers には HasegawaYohei を指定してください.  
+マージは Reviewer が行います.
+
 
 ### 新たにコマンドを追加する
 ボットに新たにコマンドを追加するには,
