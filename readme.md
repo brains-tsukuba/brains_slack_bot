@@ -76,10 +76,10 @@ npm start
 
 動作確認は, Bot を立ち上げた上で, Slack BrainsTsukuba Team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
 ```
-(Slack @brainsbotDev がいるチャンネルで)
-@brainsbotDev brains get joinmessage
+(Slack @BrainsBot がいるチャンネルで)
+@BrainsBot brains get joinmessage
 
-(Slack @brainsbotDev DM で)
+(Slack @BrainsBot DM で)
 brains get joinmessage
 ```
 正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
