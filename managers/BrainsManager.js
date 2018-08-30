@@ -34,7 +34,7 @@ module.exports = class BrainsManager extends BaseManager {
       if (arg === 'any') {
         const actions = this.modules.BrainsManagerService.getBrainsMindButtons();
         return [{
-          title: `Brains Mind`,
+          title: 'Brains Mind',
           fallback: 'fallback',
           callback_id: 'brains_mind_any',
           attachment_type: 'default',
@@ -54,4 +54,4 @@ module.exports = class BrainsManager extends BaseManager {
 
     this.reply(this.message, { attachments });
   }
-}
+};

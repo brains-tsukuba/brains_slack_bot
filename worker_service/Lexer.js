@@ -1,6 +1,6 @@
 class JsonParseError {
   constructor (message) {
-    this.name = "JsonParseError";
+    this.name = 'JsonParseError';
     this.message = message;
   }
 }
@@ -10,7 +10,7 @@ module.exports = class Lexer {
   }
 
   lex() {
-    const dividedUserMessage = this.formatString(this.userMessage).split(" ");
+    const dividedUserMessage = this.formatString(this.userMessage).split(' ');
     const command  = dividedUserMessage[0].charAt(0).toUpperCase() + dividedUserMessage[0].slice(1);
     const option   = dividedUserMessage[1];
     const argument = this.buildArgs(dividedUserMessage.slice(2, dividedUserMessage.length));
@@ -25,7 +25,7 @@ module.exports = class Lexer {
     if (argsOriginal === undefined || argsOriginal === null || argsOriginal.length === 0) {
       return;
     }
-    if (argsOriginal[0].charAt(0) === "{") {
+    if (argsOriginal[0].charAt(0) === '{') {
       return this.buildJson(argsOriginal);
     }
 
@@ -34,20 +34,20 @@ module.exports = class Lexer {
 
   buildJson(argsOriginal) {
     try {
-      return JSON.parse(`${argsOriginal.join("")}`);
+      return JSON.parse(`${argsOriginal.join('')}`);
     }
     catch (e){
-      throw new JsonParseError("Jsonパースに失敗しました.");
+      throw new JsonParseError('Jsonパースに失敗しました.');
     }
   }
 
   formatString (string) {
     return string
-          .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => {
-            return String.fromCharCode(s.charCodeAt(0) - 65248);
-          })
-          .replace(/，/g, ",")
-          .replace(/“/g, "\"")
-          .replace(/”/g, "\"");
+      .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => {
+        return String.fromCharCode(s.charCodeAt(0) - 65248);
+      })
+      .replace(/，/g, ',')
+      .replace(/“/g, '"')
+      .replace(/”/g, '"');
   }
-}
+};

@@ -1,12 +1,11 @@
 require('dotenv').config();
 
 if (!process.env.TOKEN) {
-  console.error('Error: Specify token in environment');
+  // console.dir('Error: Specify token in environment');
   process.exit(1);
 }
 
 const Botkit = require('botkit');
-const os = require('os');
 
 const controller = Botkit.slackbot({
   interactive_replies: true,
@@ -29,12 +28,11 @@ controller.setupWebserver(process.env.PORT, (err, webserver) => {
   controller.createWebhookEndpoints(webserver);
 });
 
-const bot = controller.spawn({
+controller.spawn({
   token: process.env.TOKEN
 }).startRTM();
 
 const normalizedPath = require('path').join(__dirname, 'skills');
 require('fs').readdirSync(normalizedPath).forEach(function(file) {
-  if (file.slice(-3) === '.js')
-  require('./skills/' + file)(controller);
+  if (file.slice(-3) === '.js')  require('./skills/' + file)(controller);
 });

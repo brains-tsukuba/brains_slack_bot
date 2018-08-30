@@ -1,17 +1,17 @@
 module.exports = class BrainsManagerService {
   constructor() {
     this.MINDS = {
-      1: `問題を自分ごとにして考え、やり抜き・解決する。`,
-      2: `Good Input/Output & Algorithm`,
-      3: `スピードは価値。早く、速く。`,
-      4: `All for One, One for All'`,
-      5: `心と身体の健康を保つ。`,
+      1: '問題を自分ごとにして考え、やり抜き・解決する。',
+      2: 'Good Input/Output & Algorithm',
+      3: 'スピードは価値。早く、速く。',
+      4: 'All for One, One for All',
+      5: '心と身体の健康を保つ。',
     };
   }
 
   getBrainsMind(id) {
     const mind = this.MINDS[id];
-    if (mind === undefined) return `引数が適切ではありません.`;
+    if (mind === undefined) return '引数が適切ではありません.';
 
     return mind;
   }
@@ -50,4 +50,4 @@ module.exports = class BrainsManagerService {
       }
     ];
   }
-}
+};
