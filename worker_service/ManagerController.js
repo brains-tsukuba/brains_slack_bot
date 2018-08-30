@@ -1,7 +1,7 @@
-const Lexer = require("./Lexer.js");
+const Lexer = require('./Lexer.js');
 class CommandNotFound {
   constructor(command){
-    this.name = "CommandNotFound";
+    this.name = 'CommandNotFound';
     this.message = `${command}は存在しないコマンドです.`;
   }
 }
@@ -16,7 +16,7 @@ module.exports = class ManagerController {
   getManager() {
     try {
       this.inputData = this.lexer.lex();
-      const manager = this.internalGetManager(this.inputData.command)
+      const manager = this.internalGetManager(this.inputData.command);
       return new manager(this.inputData, this.hearContext);
     }
     catch (e) {
@@ -33,13 +33,13 @@ module.exports = class ManagerController {
   }
 
   importManagers() {
-    const filePath = "managers";
-    require("fs").readdirSync(filePath).forEach(filename => {
-      if (filename.slice(-10) === "Manager.js") {
+    const filePath = 'managers';
+    require('fs').readdirSync(filePath).forEach(filename => {
+      if (filename.slice(-10) === 'Manager.js') {
         const key = filename.slice(0, -10);
-        const filePath = "../managers";
+        const filePath = '../managers';
         this.managers[key] = require(`${filePath}/${filename}`);
       }
     });
   }
-}
+};

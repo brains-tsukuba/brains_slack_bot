@@ -37,8 +37,8 @@ module.exports = class BaseManager {
     return method;
   }
 
-  defaultMethod(that) {
-    const message = `オプションが不適切です.`;
+  defaultMethod() {
+    const message = 'オプションが不適切です.';
     this.reply(this.message, message);
   }
 
@@ -46,7 +46,7 @@ module.exports = class BaseManager {
     const helps = this.helpArguments[this.inputData.argument];
 
     if (helps === undefined || helps === null || !(helps instanceof Array)) {
-      return this.reply(this.message, ``);
+      return this.reply(this.message, '');
     }
 
     const message = helps.join('\n');
@@ -57,4 +57,4 @@ module.exports = class BaseManager {
     const method = this.optionToMethod(this.inputData.option);
     method.bind(this)();
   }
-}
+};
