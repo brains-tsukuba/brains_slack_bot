@@ -36,7 +36,7 @@ module.exports = class ${this.managerName}Manager extends BaseManager {
   /**
   option1() {
     const message = 'Hello world!';
-    this.replay(this.message, message);
+    this.reply(this.message, message);
   }
   */
 

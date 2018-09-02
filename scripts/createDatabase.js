@@ -12,6 +12,7 @@ sequelize
   })
   .catch(error => {
     if (error.original.code === '42P04') console.error(`ERROR! database ${process.env.DATABASE_NAME} already exists.`);
+    else if (error.original.code === '42501') console.error(`ERROR! permission denied to create database.`);
     else console.error(error);
   })
   .finally(() => {
