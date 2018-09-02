@@ -44,8 +44,9 @@ $ cd brains_slack_bot
 ```
 
 #### PostgreSQLについて
-brains_slack_bot では DB に PostgreSQL を使用しています.  
 *postgres のインストールやユーザの作成が済んでいる場合はこのセクションは飛ばしてください.*
+
+brains_slack_bot では DB に PostgreSQL を使用しています.  
 
 まずは postgres をインストールします.
 ```
@@ -79,6 +80,7 @@ $ postgres -D /usr/local/var/postgres
 ```
 
 その後以下のコマンドを実行してください.  
+*:ng は廃止になりました. sequelize-cli をグローバルインストールしていない場合もこちらを利用してください.*
 ```
 $ npm run setup
 ```
@@ -86,8 +88,9 @@ $ npm run setup
 #### 動作確認
 Botの立ち上げコマンドは以下の通りです.
 ```
-npm start
+$ npm start
 ```
+*nodemon を使用しているためファイル編集後, 自動的にリロードされます.*
 
 動作確認は, Bot を立ち上げた上で, Slack BrainsTsukuba Team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
 ```
@@ -116,7 +119,7 @@ Pull Request を Open する際は, テンプレートに従って必要項目�
 ボットに新たにコマンドを追加するには,
 
 ```
-npm run generate -- [CommnadName]
+$ npm run generate -- コマンド名
 ```
 
 を実行してください. これで新たなコマンドの雛形が生成されます.
@@ -127,7 +130,7 @@ module.exports = class SlackManager extends BaseManager {
   constructor(inputData, hearContext) {
     super(inputData, hearContext, []);
   }
-}
+};
 ```
 
 super()の第三引数に文字列の配列の形で, 必要なモジュール名を追加することで, そのモジュールを使用することができます.
@@ -158,10 +161,10 @@ get() {
 
 上記の例は, getオプションを追加した例です.
 
-### 新たなモジュールを追加する
+### 新たにモジュールを追加する
 モジュールは共通化したい処理等をまとめるために作成します.  
 モジュールを作成するには以下のコマンドを使用します.
 ```
-npm run module -- [ModuleName]
+$ npm run module -- モジュール名
 ```
 これを実行すると, worker_service 以下に, [ModuleName]Service.js というファイルが生成されます.
