@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 require('dotenv').config();
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('postgres', process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
@@ -12,6 +13,7 @@ sequelize
   })
   .catch(error => {
     if (error.original.code === '42P04') console.error(`ERROR! database ${process.env.DATABASE_NAME} already exists.`);
+    else if (error.original.code === '42501') console.error('ERROR! permission denied to create database.');
     else console.error(error);
   })
   .finally(() => {
