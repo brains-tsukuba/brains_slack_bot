@@ -27,10 +27,9 @@ class Generater {
 `const BaseManager = require('./BaseManager');
 module.exports = class ${this.managerName}Manager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['']);
+    super(inputData, hearContext, []);
     //this.helpArguments.option1 = ['arg1', 'arg2', ...];
-    //this.helpArguments.option2 = ['arg1', 'arg2', ...];
-    //this.options.push('option1', 'option2');
+    //this.options.push('option1');
   }
 
   /**
