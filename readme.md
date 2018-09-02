@@ -40,17 +40,35 @@ brains help get
 brains-tsukuba organization の加入に関しては, Yohei Hasegawa に連絡してください.
 ```
 $ git clone https://github.com/brains-tsukuba/brains_slack_bot
+$ cd brains_slack_bot
+```
+
+#### PostgreSQLについて
+brains_slack_bot では DB に PostgreSQL を使用しています.  
+*postgres のインストールやユーザの作成が済んでいる場合はこのセクションは飛ばしてください.*
+
+まずは postgres をインストールします.
+```
+$ brew install postgresql
+```
+続いて, postgres を起動しユーザを作成します.
+```
+$ postgres -D /usr/local/var/postgres
+(別タブで)
+$ psql postgres
+postgres=# CREATE USER ユーザ名 WITH CREATEDB
 ```
 
 #### .env ファイルについて
 *クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*  
 
 .env ファイルの値を設定します. 該当項目は以下の4つです.
-- DATABASE_URL_LOCAL: ローカルの postgres の host を設定してください.
-- DATABASE_PORT: ローカルの postgres のポート番号を設定してください.
-- DATABASE_USER: ローカルの postgres のユーザ名を設定してください.
+- DATABASE_URL_LOCAL: ローカルの postgres の host を設定してください(デフォルトで 127.0.0.1 です).
+- DATABASE_PORT: ローカルの postgres のポート番号を設定してください(デフォルトで 5432 です).
+- DATABASE_USER: ローカルの postgres のユーザ名を設定してください(先程作成したユーザもしくは CREATEDB 権限のあるユーザを指定してください).
 - DATABASE_PASSWORD: ローカルの postgres のパスワードを設定してください.
 
+*.env ファイルは brains_slack_bot/ 直下においてください.*
 
 #### プロジェクトのセットアップ
 必要なモジュールのインストールと DB のセットアップを行います.  
@@ -61,12 +79,9 @@ $ postgres -D /usr/local/var/postgres
 ```
 
 その後以下のコマンドを実行してください.  
-*注 sequelize-cli をグローバルにインストールしていない場合は, 以下の `setup` を `setup:ng` にして実行してください*
 ```
-$ cd brains_slack_bot
 $ npm run setup
 ```
-
 
 #### 動作確認
 Botの立ち上げコマンドは以下の通りです.
@@ -110,7 +125,7 @@ npm run generate -- [CommnadName]
 const BaseManager = require('./BaseManager');
 module.exports = class SlackManager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['']);
+    super(inputData, hearContext, []);
   }
 }
 ```
