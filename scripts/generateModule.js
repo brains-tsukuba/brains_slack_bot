@@ -27,7 +27,7 @@ class Generater {
 `module.exports = class ${this.moduleName}Service {
   constructor() {
   }
-}
+};
 `;
 
     return fileContent;
