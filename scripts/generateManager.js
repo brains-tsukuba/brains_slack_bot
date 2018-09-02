@@ -39,7 +39,7 @@ module.exports = class ${this.managerName}Manager extends BaseManager {
   }
   */
 
-}
+};
 `;
 
     return fileContent;
