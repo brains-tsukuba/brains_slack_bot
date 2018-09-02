@@ -57,7 +57,7 @@ $ brew install postgresql
 $ postgres -D /usr/local/var/postgres
 (別タブで)
 $ psql postgres
-postgres=# CREATE USER ユーザ名 WITH CREATEDB
+postgres=# CREATE USER ユーザ名 WITH PASSWORD '*パスワード*' CREATEDB;
 ```
 
 #### .env ファイルについて
@@ -101,6 +101,7 @@ $ npm start
 brains get joinmessage
 ```
 正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
+*新規コマンドや新規オプションの追加の場合はローカルだけの返信になります.*
 
 #### 開発を始める際の注意点
 開発を始める前に, Slack BrainsTsukuba Team の #brains_bot でどうような機能を追加/修正するかを共有してください.  
