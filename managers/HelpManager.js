@@ -7,13 +7,13 @@ module.exports = class HelpManager extends BaseManager {
   list() {
     const managers = this.modules.ManagerController.managers;
     const commandArray = Object.keys(managers)
-      .filter( (value, index, array) => {
+      .filter( value => {
         return value !== 'Base' && value !== 'Help';
       }, this)
-      .map( (value, index, array) => {
+      .map( value => {
         return value.charAt(0).toLowerCase() + value.slice(1);
       }, this);
     const message = commandArray.join('\n');
     this.reply(this.message, message);
   }
-}
+};

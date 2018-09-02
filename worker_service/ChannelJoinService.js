@@ -15,7 +15,7 @@ https://github.com/brains-tsukuba/Info-and-Rules/blob/master/documents/procedure
 
 それでは、共に『世界を進めるIT界のBrains』になることを目指し、
 そのためのプログラミングスキルとヒューマンスキルの獲得に向けて、共に支え合っていきましょう！！
-`
+`;
     return welcomeText;
   }
-}
+};

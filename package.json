@@ -1,6 +1,6 @@
 {
   "name": "brains_slack_bot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "brains slack team にて様々な機能を提供します.",
   "main": "generate.js",
   "directories": {
@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "botkit": "^0.6.16",
     "dotenv": "^5.0.1",
     "is_js": "^0.9.0",
@@ -15,12 +16,23 @@
     "sequelize": "^4.38.0"
   },
   "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.4.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "nodemon": "^1.18.4",
     "sequelize-cli": "^4.0.0"
   },
   "scripts": {
-    "start": "node slack_bot.js",
+    "start": "node_modules/.bin/nodemon slack_bot.js",
     "generate": "node ./scripts/generateManager.js",
     "module": "node ./scripts/generateModule.js",
+    "setup": "npm i && npm run db:init",
+    "db:init": "node ./scripts/createDatabase.js && npm run migrate && npm run seed:all",
+    "migrate": "node_modules/.bin/sequelize db:migrate --env development",
+    "seed:all": "node_modules/.bin/sequelize db:seed:all --env development",
+    "lint": "eslint managers && eslint worker_service && eslint slack_bot.js",
     "test": "mocha"
   },
   "repository": {

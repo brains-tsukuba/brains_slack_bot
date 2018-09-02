@@ -35,43 +35,91 @@ brains help get
 
 ### 環境構築
 
-*クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*
+#### レポジトリのクローン
+**brains-tsukuba の GitHub Organization に加入後**, brains_slack_bot を clone してください.  
+brains-tsukuba organization の加入に関しては, Yohei Hasegawa に連絡してください.
+```
+$ git clone https://github.com/brains-tsukuba/brains_slack_bot
+$ cd brains_slack_bot
+```
 
-brains-tsukuba の GitHub Organization に加入後, brains_slack_bot を clone して, 必要なモジュールをインストールしてください.
+#### PostgreSQLについて
+*postgres のインストールやユーザの作成が済んでいる場合はこのセクションは飛ばしてください.*
+
+brains_slack_bot では DB に PostgreSQL を使用しています.  
+
+まずは postgres をインストールします.
 ```
-git clone https://github.com/brains-tsukuba/brains_slack_bot
-cd brains_slack_bot
-npm i
+$ brew install postgresql
+```
+続いて, postgres を起動しユーザを作成します.
+```
+$ postgres -D /usr/local/var/postgres
+(別タブで)
+$ psql postgres
+postgres=# CREATE USER ユーザ名 WITH CREATEDB
 ```
 
-DB は Postgres で, ORM に Sequelize を使用しています.   
-Migration 後に初期データを挿入します.
-```
-sequelize db:migrate --env development
-sequelize db:seed:all
-```
-*注 sequelize をグローバルにインストールしていない場合は, sequelze の部分が node_modules/.bin/sequelize になります.*
+#### .env ファイルについて
+*クライアントIDやトークンの管理に .env ファイルを使用しています. はじめに, 管理者(Yohei Hasegawa)から .env ファイルを受け取ってください.*  
 
+.env ファイルの値を設定します. 該当項目は以下の4つです.
+- DATABASE_URL_LOCAL: ローカルの postgres の host を設定してください(デフォルトで 127.0.0.1 です).
+- DATABASE_PORT: ローカルの postgres のポート番号を設定してください(デフォルトで 5432 です).
+- DATABASE_USER: ローカルの postgres のユーザ名を設定してください(先程作成したユーザもしくは CREATEDB 権限のあるユーザを指定してください).
+- DATABASE_PASSWORD: ローカルの postgres のパスワードを設定してください.
+
+*.env ファイルは brains_slack_bot/ 直下においてください.*
+
+#### プロジェクトのセットアップ
+必要なモジュールのインストールと DB のセットアップを行います.  
+
+はじめに, ローカルで postgres を起動します.
+```
+$ postgres -D /usr/local/var/postgres
+```
+
+その後以下のコマンドを実行してください.  
+*:ng は廃止になりました. sequelize-cli をグローバルインストールしていない場合もこちらを利用してください.*
+```
+$ npm run setup
+```
+
+#### 動作確認
 Botの立ち上げコマンドは以下の通りです.
 ```
-npm start
+$ npm start
 ```
+*nodemon を使用しているためファイル編集後, 自動的にリロードされます.*
 
-動作確認は, Bot を立ち上げた上で, brains slack team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
+動作確認は, Bot を立ち上げた上で, Slack BrainsTsukuba Team でこの Bot をメンションするか, DM で何か適当なコマンドを送信してください.
 ```
-(Slack @brainsbotDev がいるチャンネルで)
-@brainsbotDev brains get joinmessage
+(Slack @BrainsBot がいるチャンネルで)
+@BrainsBot brains get joinmessage
 
-(Slack @brainsbotDev DM で)
+(Slack @BrainsBot DM で)
 brains get joinmessage
 ```
 正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
+
+#### 開発を始める際の注意点
+開発を始める前に, Slack BrainsTsukuba Team の #brains_bot でどうような機能を追加/修正するかを共有してください.  
+機能に関する仕様策定もこのチャンネルで行います.
+
+実際に開発する際は, develop ブランチから feature/ もしくは fix/ ブランチを切ってから作業を行ってください.  
+基本的に, ブランチ名は作業内容を一言で表すような名前にしてください.  
+`ex. feature/add_hoge_command`
+
+Pull Request を Open する際は, テンプレートに従って必要項目を記入してください.  
+また, Reviewiers には HasegawaYohei を指定してください.  
+マージは Reviewer が行います.
+
 
 ### 新たにコマンドを追加する
 ボットに新たにコマンドを追加するには,
 
 ```
-npm run generate -- [CommnadName]
+$ npm run generate -- コマンド名
 ```
 
 を実行してください. これで新たなコマンドの雛形が生成されます.
@@ -80,9 +128,9 @@ npm run generate -- [CommnadName]
 const BaseManager = require('./BaseManager');
 module.exports = class SlackManager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['']);
+    super(inputData, hearContext, []);
   }
-}
+};
 ```
 
 super()の第三引数に文字列の配列の形で, 必要なモジュール名を追加することで, そのモジュールを使用することができます.
@@ -113,10 +161,10 @@ get() {
 
 上記の例は, getオプションを追加した例です.
 
-### 新たなモジュールを追加する
+### 新たにモジュールを追加する
 モジュールは共通化したい処理等をまとめるために作成します.  
 モジュールを作成するには以下のコマンドを使用します.
 ```
-npm run module -- [ModuleName]
+$ npm run module -- モジュール名
 ```
 これを実行すると, worker_service 以下に, [ModuleName]Service.js というファイルが生成されます.
