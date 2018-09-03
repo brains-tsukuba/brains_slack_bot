@@ -2,7 +2,7 @@ const BaseManager = require('./BaseManager');
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
     super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
-    this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
+    this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage', 'options'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
     this.options.push('get', 'mind');
   }
@@ -13,6 +13,7 @@ module.exports = class BrainsManager extends BaseManager {
       agreement: 'https://github.com/brains-tsukuba/Info-and-Rules',
       curriculum: 'https://github.com/brains-tsukuba/Info-and-Rules/blob/master/documents/curriculum.md',
       joinmessage: joinmessage,
+      options: this.helpArguments.get.join(', ')
     };
 
     if (target in messages) {
