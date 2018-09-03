@@ -12,6 +12,7 @@ module.exports = class BaseManager {
 
   init() {
     this.helpArguments.list = this.options;
+    this.bot = this.hearContext.bot;
     this.message = this.hearContext.message;
     this.reply = this.hearContext.bot.reply;
     this.includeModule();

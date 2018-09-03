@@ -169,3 +169,22 @@ get() {
 $ npm run module -- モジュール名
 ```
 これを実行すると, worker_service 以下に, [ModuleName]Service.js というファイルが生成されます.
+
+### slack API を使う
+[slack API](https://api.slack.com/) を使用する場合は,
+`this.bot.api`から該当メソッドを参照してください.
+
+例えば [channles.history](https://api.slack.com/methods/channels.history) を使用する場合は, 
+```
+this.bot.api.channels.history({
+  token: process.env.LEGACY_TOKEN,
+  channel: ${channelToken}
+}, (err, res) => {
+  if (err) console.error(err);
+  else {
+    const replyMessage = res.messages.map(value => value.text).reverse().join('\n');
+    this.reply(this.message, replyMessage);
+  }
+});
+```
+とすると, ${channelToken}の channel の会話をいくつか取得し, そのテキストのみを返すことが出来ます.
