@@ -4,7 +4,8 @@ module.exports = class BrainsManager extends BaseManager {
     super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
-    this.options.push('get', 'mind');
+    this.helpArguments.participation = ['daily'];
+    this.options.push('get', 'mind', 'participation');
   }
 
   REPLY_MESSAGES_FOR_GET_METHOD(target) {
@@ -54,4 +55,37 @@ module.exports = class BrainsManager extends BaseManager {
 
     this.reply(this.message, { attachments });
   }
+
+  participation() {
+
+    // const channelId = 'C63T11MT7'; //todo: use sequelize.
+    const channelId = 'C9QMTFJ77'; //todo: use sequelize.
+    const emojiNames = ['join', 'job', 'baito', 'kensa-', 'asobitai', 'yamai'];
+
+    const {promisify} = require('util');
+    (async () => {
+      const result = await promisify(this.bot.api.channels.history)({
+        token: process.env.LEGACY_TOKEN,
+        channel: channelId
+      }).catch(handleError);
+      const ts = await result.messages.filter(message => message.text.includes('participation'))[0].ts;
+
+      await Promise.all(emojiNames.map(async name => await promisify(this.bot.api.reactions.add)({
+        token: process.env.LEGACY_TOKEN,
+        channel: channelId,
+        // channel: bottestChannelId,
+        timestamp: ts,
+        name: name
+      })));
+
+    })();
+
+    this.reply(this.message, 'reaction added');
+
+    function handleError(err) {
+      this.reply(this.message, err);
+    }
+
+  }
+
 };
