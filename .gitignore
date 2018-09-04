@@ -9,4 +9,5 @@ db/
 .vscode
 coverage
 db_bot/*
+package-lock.json
 !.gitkeep
