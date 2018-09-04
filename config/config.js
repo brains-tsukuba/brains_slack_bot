@@ -30,4 +30,4 @@ module.exports = {
     seederStrage: 'json',
     timezone: 'Asia/Tokyo'
   }
-}
+};
