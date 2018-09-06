@@ -4,7 +4,7 @@ module.exports = class BrainsManager extends BaseManager {
     super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
-    this.options.push('get', 'mind');
+    this.options.push('get', 'mind', 'diary');
   }
 
   REPLY_MESSAGES_FOR_GET_METHOD(target) {
@@ -53,5 +53,48 @@ module.exports = class BrainsManager extends BaseManager {
     })(this.inputData.argument);
 
     this.reply(this.message, { attachments });
+  }
+
+  diary() {
+    const models = require('../models');
+    const { promisify } = require('util');
+
+    (async () => {
+      const generalChannel = await models.channel.findOne({
+        where: {
+          name: 'general'
+        }
+      }).catch(err => {
+        console.error(err);
+        return { slackId: 0 };
+      });
+
+      const result = await promisify(this.bot.api.channels.history)({
+        token: process.env.AUTH_TOKEN,
+        channel: generalChannel.slackId,
+        count: 15
+      }).catch(err => {
+        console.error(err);
+        return {
+          messages: ['API ACCESS ERROR!']
+        };
+      });
+
+      const reactionUsers = result.messages.map(value => {
+        if (value.bot_id !== 'B5FV4NUEL') return;
+        if (value.attachments[0].title !== 'Brains 活動') return;
+
+        return value.reactions
+          .filter(value => value.name === 'join' || value.name === 'late')
+          .map(value => value.users);
+      });
+
+      //TODO: reactionUsersを1次元にする.
+      //TODO: 1次元化された配列からランダムで ID を取得し, テーブルから user を取得
+      //TODO: 取得した user をメンションして投稿する
+
+      const replyMessage = 'reply';
+      this.reply(this.message, replyMessage);
+    })();
   }
 };
