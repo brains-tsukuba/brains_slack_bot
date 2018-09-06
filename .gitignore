@@ -10,3 +10,4 @@ db/
 coverage
 db_bot/*
 !.gitkeep
+/.editorconfig
