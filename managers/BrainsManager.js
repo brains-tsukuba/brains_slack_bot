@@ -1,14 +1,14 @@
 const BaseManager = require('./BaseManager');
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
+    super(inputData, hearContext, ['TeamJoinService', 'BrainsManagerService']);
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
     this.options.push('get', 'mind');
   }
 
   REPLY_MESSAGES_FOR_GET_METHOD(target) {
-    const joinmessage = this.modules.ChannelJoinService.getWelcomeText();
+    const joinmessage = this.modules.TeamJoinService.getWelcomeText();
     const messages = {
       agreement: 'https://github.com/brains-tsukuba/Info-and-Rules',
       curriculum: 'https://github.com/brains-tsukuba/Info-and-Rules/blob/master/documents/curriculum.md',
