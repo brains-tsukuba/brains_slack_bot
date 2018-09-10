@@ -6,6 +6,7 @@ module.exports = {
       {
         name: 'Ryo Murakami',
         slackId: 'U2M9QF17E',
+        enrolledYear: 2013,
         latestMessageDate: null,
         disable: false,
         created_at: '2018-08-16 00:00:00',
@@ -14,6 +15,7 @@ module.exports = {
       {
         name: 'Yohei Hasegawa',
         slackId: 'U48B4F493',
+        enrolledYear: 2015,
         latestMessageDate: null,
         disable: false,
         created_at: '2018-08-16 00:00:00',
@@ -118,6 +120,7 @@ module.exports = {
       {
         name: 'Teruhisa Hanzawa',
         slackId: 'U59LRPCN6',
+        enrolledYear: 2017,
         latestMessageDate: null,
         disable: false,
         created_at: '2018-08-16 00:00:00',
@@ -278,6 +281,7 @@ module.exports = {
       {
         name: 'Hikaru Egashira',
         slackId: 'UANUX2F52',
+        enrolledYear: 2018,
         latestMessageDate: null,
         disable: false,
         created_at: '2018-08-16 00:00:00',
@@ -310,6 +314,7 @@ module.exports = {
       {
         name: 'Kosuke Yabuno',
         slackId: 'UAWPLSBGA',
+        enrolledYear: 2018,
         latestMessageDate: null,
         disable: false,
         created_at: '2018-08-16 00:00:00',
