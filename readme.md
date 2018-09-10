@@ -140,7 +140,7 @@ super()の第三引数に文字列の配列の形で, 必要なモジュール�
 const BaseManager = require('./BaseManager');
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['ChannelJoinService']);
+    super(inputData, hearContext, ['TeamJoinService']);
   }
 }
 ```
