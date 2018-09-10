@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   var user = sequelize.define('user', {
     name: DataTypes.STRING,
     slackId: DataTypes.STRING,
+    enrolledYear: DataTypes.INTEGER,
     latestMessageDate: DataTypes.DATE,
     disable: DataTypes.BOOLEAN
   }, {

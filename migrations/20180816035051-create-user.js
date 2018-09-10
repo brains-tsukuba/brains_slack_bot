@@ -14,6 +14,9 @@ module.exports = {
       slackId: {
         type: Sequelize.STRING
       },
+      enrolledYear: {
+        type: Sequelize.INTEGER
+      },
       latestMessageDate: {
         type: Sequelize.DATE
       },
