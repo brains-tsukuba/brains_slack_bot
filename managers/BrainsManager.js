@@ -8,6 +8,7 @@ module.exports = class BrainsManager extends BaseManager {
     super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
+    this.helpArguments.diary = ['現在このオプションに引数はありません'];
     this.options.push('get', 'mind', 'diary');
   }
 
