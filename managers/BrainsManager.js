@@ -1,4 +1,8 @@
 const BaseManager = require('./BaseManager');
+const Sequelize = require('sequelize');
+const models = require('../models');
+const { promisify } = require('util');
+
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
     super(inputData, hearContext, ['ChannelJoinService', 'BrainsManagerService']);
@@ -52,12 +56,12 @@ module.exports = class BrainsManager extends BaseManager {
       }
     })(this.inputData.argument);
 
-    this.reply(this.message, { attachments });
+    this.reply(this.message, {attachments});
   }
 
   diary() {
-    const models = require('../models');
-    const { promisify } = require('util');
+    const { gte } = Sequelize.Op;
+    const GOOGLE_CALENDAR_BOT_ID = require('../const_values/text.js').GOOGLE_CALENDAR_BOT_ID;
 
     (async () => {
       const generalChannel = await models.channel.findOne({
@@ -80,21 +84,27 @@ module.exports = class BrainsManager extends BaseManager {
         };
       });
 
-      const reactionUsers = result.messages.map(value => {
-        if (value.bot_id !== 'B5FV4NUEL') return;
-        if (value.attachments[0].title !== 'Brains 活動') return;
+      const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].title === 'Brains 活動')[0];
+      const userSlackIds = targetMessage.reactions
+        .filter(value => value.name === 'join' || value.name === 'late')
+        .map(value => value.users)
+        .reduce((previous, current) => {
+          previous.push(...current);
+          return previous;
+        }, []);
 
-        return value.reactions
-          .filter(value => value.name === 'join' || value.name === 'late')
-          .map(value => value.users);
+      const targetSlackIds = await models.user.findAll({
+        where: {
+          slackId: userSlackIds,
+          enrolledYear: {
+            [gte]: (new Date().getFullYear() - 1)
+          }
+        }
       });
+      const targetUser = targetSlackIds[Math.floor(Math.random() * targetSlackIds.length)];
 
-      //TODO: reactionUsersを1次元にする.
-      //TODO: 1次元化された配列からランダムで ID を取得し, テーブルから user を取得
-      //TODO: 取得した user をメンションして投稿する
-
-      const replyMessage = 'reply';
-      this.reply(this.message, replyMessage);
+      this.reply(this.message, `今日の日報を書く人は, <@${targetUser.slackId}>です.`);
     })();
+
   }
 };
