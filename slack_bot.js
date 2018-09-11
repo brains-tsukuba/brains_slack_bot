@@ -25,6 +25,10 @@ controller.setupWebserver(process.env.PORT, (err, webserver) => {
     else res.send('Success!');
   });
 
+  webserver.get('/', (req, res) => {
+    res.send('I\'m fine.');
+  });
+
   controller.createWebhookEndpoints(webserver);
 });
 
