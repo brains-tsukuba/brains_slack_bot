@@ -57,7 +57,7 @@ $ brew install postgresql
 $ postgres -D /usr/local/var/postgres
 (別タブで)
 $ psql postgres
-postgres=# CREATE USER ユーザ名 WITH CREATEDB
+postgres=# CREATE USER ユーザ名 WITH PASSWORD '*パスワード*' CREATEDB;
 ```
 
 #### .env ファイルについて
@@ -101,6 +101,7 @@ $ npm start
 brains get joinmessage
 ```
 正常に動作していれば, 応答が Heroku とローカルの2つ来ます.
+*新規コマンドや新規オプションの追加の場合はローカルだけの返信になります.*
 
 #### 開発を始める際の注意点
 開発を始める前に, Slack BrainsTsukuba Team の #brains_bot でどうような機能を追加/修正するかを共有してください.  
@@ -139,7 +140,7 @@ super()の第三引数に文字列の配列の形で, 必要なモジュール�
 const BaseManager = require('./BaseManager');
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
-    super(inputData, hearContext, ['ChannelJoinService']);
+    super(inputData, hearContext, ['TeamJoinService']);
   }
 }
 ```
@@ -168,3 +169,21 @@ get() {
 $ npm run module -- モジュール名
 ```
 これを実行すると, worker_service 以下に, [ModuleName]Service.js というファイルが生成されます.
+
+### slack API を使う
+[slack API](https://api.slack.com/) を使用する場合は,
+`this.bot.api`から該当メソッドを参照してください.
+
+例えば [channles.history](https://api.slack.com/methods/channels.history) を使用する場合は, 
+```
+const { promisify } = require('util');
+(async () => {
+  const result = await promisify(this.bot.api.channels.history)({
+    token: process.env.LEGACY_TOKEN,
+    channel: channelToken
+  }).catch(handleError);
+  const replyMessage = result.messages.map(value => value.text).reverse().join('\n');
+  this.reply(this.message, replyMessage);
+})();
+```
+とすると, ${channelToken}の channel の会話をいくつか取得し, そのテキストのみを返すことが出来ます.

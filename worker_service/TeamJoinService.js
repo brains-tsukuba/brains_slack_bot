@@ -1,4 +1,4 @@
-module.exports = class ChannelJoinService {
+module.exports = class TeamJoinService {
   getWelcomeText () {
     const welcomeText = `Brainsへようこそ!!
 課題を終えた人はお疲れ様です！これから一緒に頑張っていきましょう！

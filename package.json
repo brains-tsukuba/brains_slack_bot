@@ -1,6 +1,6 @@
 {
   "name": "brains_slack_bot",
-  "version": "1.1.0",
+  "version": "1.5.0",
   "description": "brains slack team にて様々な機能を提供します.",
   "main": "generate.js",
   "directories": {

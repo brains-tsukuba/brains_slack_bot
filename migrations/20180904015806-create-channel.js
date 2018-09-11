@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('channels', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,15 +14,6 @@ module.exports = {
       slackId: {
         type: Sequelize.STRING
       },
-      enrolledYear: {
-        type: Sequelize.INTEGER
-      },
-      latestMessageDate: {
-        type: Sequelize.DATE
-      },
-      disable: {
-        type: Sequelize.BOOLEAN
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -34,6 +25,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('channels');
   }
 };
