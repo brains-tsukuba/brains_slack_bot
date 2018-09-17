@@ -4,13 +4,16 @@ class JsonParseError {
     this.message = message;
   }
 }
+const BRAINS_BOT_ID = '@U9RKJ2QTZ';
 module.exports = class Lexer {
   constructor(userMessage) {
     this.userMessage = userMessage;
   }
 
   lex() {
-    const dividedUserMessage = this.formatString(this.userMessage).split(' ');
+    const dividedUserMessage = this.formatString(this.userMessage)
+      .split(' ')
+      .filter(value => value !== 'Reminder:' && value !== `<${BRAINS_BOT_ID}>`);
     const command  = dividedUserMessage[0].charAt(0).toUpperCase() + dividedUserMessage[0].slice(1);
     const option   = dividedUserMessage[1];
     const argument = this.buildArgs(dividedUserMessage.slice(2, dividedUserMessage.length));

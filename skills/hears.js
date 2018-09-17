@@ -1,5 +1,5 @@
 module.exports = controller => {
-  controller.hears(['^[a-z]'], 'direct_message,direct_mention', (bot, message) => {
+  controller.hears(['^[a-z]'], 'direct_message,direct_mention,mention', (bot, message) => {
     const hearContext = {
       bot,
       message
@@ -8,4 +8,4 @@ module.exports = controller => {
     const manager = managerController.getManager();
     manager.run();
   });
-}
+};
