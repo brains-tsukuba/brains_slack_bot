@@ -12,6 +12,7 @@ module.exports = class Lexer {
 
   lex() {
     const dividedUserMessage = this.formatString(this.userMessage)
+      .replace(/\.$/, '')
       .split(' ')
       .filter(value => value !== 'Reminder:' && value !== `<${BRAINS_BOT_ID}>`);
     const command  = dividedUserMessage[0].charAt(0).toUpperCase() + dividedUserMessage[0].slice(1);
