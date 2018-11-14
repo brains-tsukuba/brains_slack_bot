@@ -9,7 +9,8 @@ module.exports = class BrainsManager extends BaseManager {
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
     this.helpArguments.diary = ['現在このオプションに引数はありません'];
-    this.options.push('get', 'mind', 'diary');
+    this.helpArguments.user = [ '現在このオプションに引数はありません' ];
+    this.options.push('get', 'mind', 'diary', 'user');
   }
 
   REPLY_MESSAGES_FOR_GET_METHOD(target) {
@@ -62,7 +63,7 @@ module.exports = class BrainsManager extends BaseManager {
 
   diary() {
     const { gte } = Sequelize.Op;
-    const { GOOGLE_CALENDAR_BOT_ID } = require('../const_values/text.js');
+    const { GOOGLE_CALENDAR_BOT_ID, BRAINS_BOT_ID } = require('../const_values/text.js');
 
     (async () => {
       const generalChannel = await models.channel.findOne({
@@ -85,9 +86,14 @@ module.exports = class BrainsManager extends BaseManager {
         };
       });
 
-      const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].title === 'Brains 活動')[0];
+      const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].pretext === 'Event starting in 1 day:')[0] ;
+
+      const excludeUserText = result.messages
+        .filter(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true )[0].text;
+      const excludeUser = excludeUserText.split(/@|>/);
+
       const reactionUserSlackIds = targetMessage.reactions
-        .filter(value => value.name === 'join' || value.name === 'late')
+        .filter(value => value.name === 'join' || value.name === 'late' || value.user === excludeUser[1])
         .map(value => value.users)
         .reduce((previous, current) => {
           previous.push(...current);
