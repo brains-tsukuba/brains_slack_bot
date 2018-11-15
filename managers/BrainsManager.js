@@ -88,19 +88,25 @@ module.exports = class BrainsManager extends BaseManager {
       const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].pretext === 'Event starting in 1 day:')[0] ;
 
       const excludeUserText = result.messages
-        .find(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true ).text;
+        .find(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true).text;
       const excludeUser = excludeUserText.match(/[A-Z0-9]+/g)[0];
 
-      const reactionUserSlackIds = targetMessage.reactions
-        .filter(value => value.name === 'join' || value.name === 'late' )
+      let reactionUserSlackIds = targetMessage.reactions
+        .filter(value => value.name === 'join' || value.name === 'late')
         .map(value => value.users)
         .reduce((previous, current) => {
           previous.push(...current);
           return previous;
-        }, [])
-        .filter(value => value !== excludeUser);
+        }, []);
+      let excludeUserIsJoin = false;
+      reactionUserSlackIds.forEach(reactionUserSlackId => {
+        if (reactionUserSlackId === excludeUser) {
+          excludeUserIsJoin = true;
+          reactionUserSlackIds.splice(reactionUserSlackId, reactionUserSlackId);
+        };
+      });
 
-      const targetSlackIds = await models.user.findAll({
+      let targetSlackIds = await models.user.findAll({
         where: {
           slackId: reactionUserSlackIds,
           enrolledYear: {
@@ -109,7 +115,14 @@ module.exports = class BrainsManager extends BaseManager {
         }
       });
       if (targetSlackIds.length === 0) {
-        targetSlackIds.push({slackId: excludeUser});
+        targetSlackIds = []
+        if (excludeUserIsJoin) {
+          targetSlackIds.push({slackId: excludeUser});
+        } else {
+          reactionUserSlackIds.forEach(reactionUserSlackId => {
+            targetSlackIds.push({slackId: reactionUserSlackId});
+          });
+        }
       };
       const targetUser = targetSlackIds[Math.floor(Math.random() * targetSlackIds.length)];
 
