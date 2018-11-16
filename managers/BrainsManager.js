@@ -98,8 +98,8 @@ module.exports = class BrainsManager extends BaseManager {
       const latestDiaryUserText = result.messages
         .find(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true).text;
       const latestDiaryUser = latestDiaryUserText.match(/[A-Z0-9]+/g)[0];
-      const exitLatestDiaryUser = reactionUserSlackIds.find(v => v === latestDiaryUser);
-      const candidateUserSlackIds = reactionUserSlackIds.filter(v => v !== exitLatestDiaryUser);
+      const existLatestDiaryUser = reactionUserSlackIds.find(v => v === latestDiaryUser);
+      const candidateUserSlackIds = reactionUserSlackIds.filter(v => v !== existLatestDiaryUser);
 
       const targetSlackIds = await models.user.findAll({
         attributes: ['slackId'],
@@ -110,7 +110,7 @@ module.exports = class BrainsManager extends BaseManager {
           }
         }
       });
-      const targetUser = shuffle(targetSlackIds.map(v => v.slackId)).concat([exitLatestDiaryUser]).shift() || shuffle(reactionUserSlackIds).shift();
+      const targetUser = shuffle(targetSlackIds.map(v => v.slackId)).concat([existLatestDiaryUser]).shift() || shuffle(reactionUserSlackIds).shift();
 
       this.reply(this.message, `今日の日報を書く人は, <@${targetUser}>です.`);
     })();
