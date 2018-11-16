@@ -2,6 +2,7 @@ const BaseManager = require('./BaseManager');
 const Sequelize = require('sequelize');
 const models = require('../models');
 const { promisify } = require('util');
+const shuffle = require('lodash/fp/shuffle');
 
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
@@ -9,8 +10,7 @@ module.exports = class BrainsManager extends BaseManager {
     this.helpArguments.get = ['agreement', 'curriculum', 'joinmessage'];
     this.helpArguments.mind = ['1', '2', '3', '4', '5', 'any'];
     this.helpArguments.diary = ['現在このオプションに引数はありません'];
-    this.helpArguments.user = [ '現在このオプションに引数はありません' ];
-    this.options.push('get', 'mind', 'diary', 'user');
+    this.options.push('get', 'mind', 'diary');
   }
 
   REPLY_MESSAGES_FOR_GET_METHOD(target) {
@@ -87,30 +87,32 @@ module.exports = class BrainsManager extends BaseManager {
       });
 
       const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].pretext === 'Event starting in 1 day:')[0] ;
-
-      const excludeUserText = result.messages
-        .filter(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true )[0].text;
-      const excludeUser = excludeUserText.split(/@|>/);
-
       const reactionUserSlackIds = targetMessage.reactions
-        .filter(value => value.name === 'join' || value.name === 'late' || value.user === excludeUser[1])
+        .filter(value => value.name === 'join' || value.name === 'late')
         .map(value => value.users)
         .reduce((previous, current) => {
           previous.push(...current);
           return previous;
         }, []);
 
+      const latestDiaryUserText = result.messages
+        .find(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true).text;
+      const latestDiaryUser = latestDiaryUserText.match(/[A-Z0-9]+/g)[0];
+      const existLatestDiaryUser = reactionUserSlackIds.find(v => v === latestDiaryUser);
+      const candidateUserSlackIds = reactionUserSlackIds.filter(v => v !== existLatestDiaryUser);
+
       const targetSlackIds = await models.user.findAll({
+        attributes: ['slackId'],
         where: {
-          slackId: reactionUserSlackIds,
+          slackId: candidateUserSlackIds,
           enrolledYear: {
             [gte]: (new Date().getFullYear() - 1)
           }
         }
       });
-      const targetUser = targetSlackIds[Math.floor(Math.random() * targetSlackIds.length)];
+      const targetUser = shuffle(targetSlackIds.map(v => v.slackId)).concat([existLatestDiaryUser]).shift() || shuffle(reactionUserSlackIds).shift();
 
-      this.reply(this.message, `今日の日報を書く人は, <@${targetUser.slackId}>です.`);
+      this.reply(this.message, `今日の日報を書く人は, <@${targetUser}>です.`);
     })();
 
   }
