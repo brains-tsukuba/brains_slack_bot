@@ -2,6 +2,7 @@ const BaseManager = require('./BaseManager');
 const Sequelize = require('sequelize');
 const models = require('../models');
 const { promisify } = require('util');
+const shuffle = require('lodash/fp/shuffle');
 
 module.exports = class BrainsManager extends BaseManager {
   constructor(inputData, hearContext) {
@@ -62,7 +63,7 @@ module.exports = class BrainsManager extends BaseManager {
 
   diary() {
     const { gte } = Sequelize.Op;
-    const { GOOGLE_CALENDAR_BOT_ID } = require('../const_values/text.js');
+    const { GOOGLE_CALENDAR_BOT_ID, BRAINS_BOT_ID } = require('../const_values/text.js');
 
     (async () => {
       const generalChannel = await models.channel.findOne({
@@ -85,7 +86,7 @@ module.exports = class BrainsManager extends BaseManager {
         };
       });
 
-      const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].title === 'Brains 活動')[0];
+      const targetMessage = result.messages.filter(value => value.bot_id === GOOGLE_CALENDAR_BOT_ID && value.attachments[0].pretext === 'Event starting in 1 day:')[0] ;
       const reactionUserSlackIds = targetMessage.reactions
         .filter(value => value.name === 'join' || value.name === 'late')
         .map(value => value.users)
@@ -94,17 +95,24 @@ module.exports = class BrainsManager extends BaseManager {
           return previous;
         }, []);
 
+      const latestDiaryUserText = result.messages
+        .find(value => value.bot_id === BRAINS_BOT_ID && /^今日の日報を書く人は,/.test(value.text) === true).text;
+      const latestDiaryUser = latestDiaryUserText.match(/[A-Z0-9]+/g)[0];
+      const existLatestDiaryUser = reactionUserSlackIds.find(v => v === latestDiaryUser);
+      const candidateUserSlackIds = reactionUserSlackIds.filter(v => v !== existLatestDiaryUser);
+
       const targetSlackIds = await models.user.findAll({
+        attributes: ['slackId'],
         where: {
-          slackId: reactionUserSlackIds,
+          slackId: candidateUserSlackIds,
           enrolledYear: {
             [gte]: (new Date().getFullYear() - 1)
           }
         }
       });
-      const targetUser = targetSlackIds[Math.floor(Math.random() * targetSlackIds.length)];
+      const targetUser = shuffle(targetSlackIds.map(v => v.slackId)).concat([existLatestDiaryUser]).shift() || shuffle(reactionUserSlackIds).shift();
 
-      this.reply(this.message, `今日の日報を書く人は, <@${targetUser.slackId}>です.`);
+      this.reply(this.message, `今日の日報を書く人は, <@${targetUser}>です.`);
     })();
 
   }
