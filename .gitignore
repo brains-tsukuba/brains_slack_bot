@@ -11,3 +11,5 @@ coverage
 db_bot/*
 !.gitkeep
 /.editorconfig
+package.lock.json
+yarn.lock
